@@ -21,22 +21,22 @@ void update_game() {
             break;
 
         case GAME_STATE:
-            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
+            if (IsKeyDown(KEY_RIGHT) | IsKeyDown(KEY_D)) {
                 move_player_horizontally(PLAYER_MOVEMENT_SPEED);
             }
 
-            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
+            if (IsKeyDown(KEY_LEFT) | IsKeyDown(KEY_A)) {
                 move_player_horizontally(-PLAYER_MOVEMENT_SPEED);
             }
 
             // Calculating collisions to decide whether the player is allowed to jump
             is_player_on_ground = is_colliding({player_pos.x, player_pos.y + 0.1f}, WALL);
-            if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) || IsKeyDown(KEY_SPACE)) && is_player_on_ground) {
+            if ((IsKeyDown(KEY_UP) | IsKeyDown(KEY_W) | IsKeyDown(KEY_SPACE)) && is_player_on_ground) {
                 player_y_velocity = -JUMP_STRENGTH;
             }
 
             update_player();
-            update_enemies();
+            EnemiesController::get_instance().update_enemies();
 
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = PAUSED_STATE;

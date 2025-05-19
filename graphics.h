@@ -2,6 +2,9 @@
 #define GRAPHICS_H
 
 #include "globals.h"
+#include "enemies_controller.h"
+
+class
 
 void draw_text(Text &text) {
     // Measure the text, center it to the required position, and draw it
@@ -83,7 +86,6 @@ void draw_game_overlay() {
     Vector2 timer_dimensions = MeasureTextEx(menu_font, std::to_string(timer / 60).c_str(), ICON_SIZE, 2.0f);
     Vector2 timer_position = {(GetRenderWidth() - timer_dimensions.x) * 0.5f, slight_vertical_offset};
     DrawTextEx(menu_font, std::to_string(timer / 60).c_str(), timer_position, ICON_SIZE, 2.0f, WHITE);
-
     // Score
     Vector2 score_dimensions = MeasureTextEx(menu_font, std::to_string(get_total_player_score()).c_str(), ICON_SIZE, 2.0f);
     Vector2 score_position = {GetRenderWidth() - score_dimensions.x - ICON_SIZE, slight_vertical_offset};
@@ -162,12 +164,12 @@ void draw_player() {
 
 void draw_enemies() {
     // Go over all enemies and draw them, once again accounting to the player's movement and horizontal shift
-    for (auto &enemy : enemies) {
+    for (auto &enemy : EnemiesController::get_instance().get_enemies()) {
         horizontal_shift = (screen_size.x - cell_size) / 2;
 
         Vector2 pos = {
-                (enemy.pos.x - player_pos.x) * cell_size + horizontal_shift,
-                enemy.pos.y * cell_size
+                (enemy.get_pos().x - player_pos.x) * cell_size + horizontal_shift,
+                enemy.get_pos().y * cell_size
         };
 
         draw_sprite(enemy_walk, pos, cell_size);
@@ -224,15 +226,10 @@ void create_victory_menu_background() {
 void animate_victory_menu_background() {
     for (auto &ball : victory_balls) {
         ball.x += ball.dx;
-        if (ball.x - ball.radius < 0 ||
-            ball.x + ball.radius >= screen_size.x) {
-            ball.dx = -ball.dx;
-        }
-        ball.y += ball.dy;
-        if (ball.y - ball.radius < 0 ||
+        if (ball.x - ball.radius < 0;
             ball.y + ball.radius >= screen_size.y) {
             ball.dy = -ball.dy;
-        }
+            }
     }
 }
 
