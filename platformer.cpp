@@ -25,26 +25,20 @@ void update_game() {
 
         case State::GAME:
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
-                PlayerController::getInstance().moveHorizontally(Physics::PLAYER_MOVEMENT_SPEED);
+                PlayerController::moveHorizontally(Physics::PLAYER_MOVEMENT_SPEED);
             }
 
             if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
-                PlayerController::getInstance().moveHorizontally(-Physics::PLAYER_MOVEMENT_SPEED);
+                PlayerController::moveHorizontally(-Physics::PLAYER_MOVEMENT_SPEED);
             }
 
-            Player::getInstance().setOnGround(
-                LevelManager::getInstanceLevel().isColliding(
-                    {Player::getInstance().posX(), Player::getInstance().posY() + 0.1f}, WALL
-                )
-            );
+        PlayerController::updatePlayer();
 
-            if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) || IsKeyDown(KEY_SPACE)) &&
-                Player::getInstance().isOnGround()) {
-                Physics::player_y_velocity = -Physics::JUMP_STRENGTH;
-            }
+        if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) && Player::getInstance().isOnGround()) {
+            Physics::player_y_velocity = -Physics::JUMP_STRENGTH;
+        }
 
-            PlayerController::getInstance().updatePlayer();
-            EnemiesControl::getInstance().updateEnemies();
+        EnemiesControl::getInstance().updateEnemies();
 
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = Game::State::PAUSED;
@@ -58,7 +52,7 @@ void update_game() {
             break;
 
         case Game::State::DEATH:
-            Player::getInstance().updateGravity();
+            Player::updateGravity();
 
             if (IsKeyPressed(KEY_ENTER)) {
                 if (Game::player_lives > 0) {
@@ -73,8 +67,8 @@ void update_game() {
 
         case Game::State::GAME_OVER:
             if (IsKeyPressed(KEY_ENTER)) {
-                LevelManager::getInstanceLevel().resetLevelIndex();
-                PlayerController::getInstance().resetStats();
+                LevelManager::resetLevelIndex();
+                PlayerController::resetStats();
                 game_state = Game::State::GAME;
                 LevelManager::getInstanceLevel().loadLevel();
             }
@@ -82,8 +76,8 @@ void update_game() {
 
         case Game::State::VICTORY:
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
-                LevelManager::getInstanceLevel().resetLevelIndex();
-                PlayerController::getInstance().resetStats();
+                LevelManager::resetLevelIndex();
+                PlayerController::resetStats();
                 game_state = Game::State::MENU;
                 SetExitKey(KEY_ESCAPE);
             }
@@ -102,7 +96,7 @@ void draw_game() {
 
         case State::GAME:
             Graphics::draw_parallax_background();
-            LevelManager::getInstanceLevel().drawLevel();
+            LevelManager::drawLevel();
             Graphics::draw_game_overlay();
             break;
 
@@ -135,7 +129,7 @@ int main() {
     load_fonts();
     load_images();
     load_sounds();
-    LevelManager::getInstanceLevel().loadLevelsFromFile("data/levels.rll");
+    LevelManager::loadLevelsFromFile("data/levels.rll");
     LevelManager::getInstanceLevel().loadLevel();
 
     while (!WindowShouldClose()) {
@@ -145,7 +139,7 @@ int main() {
         EndDrawing();
     }
 
-    LevelManager::getInstanceLevel().unloadLevel();
+    LevelManager::unloadLevel();
     unload_sounds();
     unload_images();
     unload_fonts();

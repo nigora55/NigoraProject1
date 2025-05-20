@@ -36,22 +36,54 @@ void Graphics::derive_graphics_metrics_from_loaded_level() {
 
 void Graphics::draw_game_overlay() {
     const float ICON_SIZE = 48.0f * screen_scale;
-    float offset_y = 8.0f * screen_scale;
+    const float offset_y = 8.0f * screen_scale;
+    const float padding = 4.0f * screen_scale;
+    const int MAX_HEARTS_DISPLAYED = 5;
 
-    for (int i = 0; i < player_lives; i++) {
-        Graphics::draw_image(heart_image, {ICON_SIZE * static_cast<float>(i) + 4.0f * screen_scale, offset_y}, ICON_SIZE);
+    // --- Draw hearts (player lives) ---
+    int hearts_to_draw = std::min(player_lives, MAX_HEARTS_DISPLAYED);
+    for (int i = 0; i < hearts_to_draw; ++i) {
+        Vector2 pos = { padding + i * (ICON_SIZE + padding), offset_y };
+        Graphics::draw_image(heart_image, pos, ICON_SIZE);
     }
 
-    Vector2 time_dim = MeasureTextEx(menu_font, std::to_string(timer / 60).c_str(), ICON_SIZE, 2.0f);
-    DrawTextEx(menu_font, std::to_string(timer / 60).c_str(),
-               {(static_cast<float>(GetRenderWidth()) - time_dim.x) * 0.5f, offset_y}, ICON_SIZE, 2.0f, WHITE);
+    // If player has more lives than screen can show, draw a multiplier label
+    if (player_lives > MAX_HEARTS_DISPLAYED) {
+        std::string extra_lives_label = "x" + std::to_string(player_lives);
+        Vector2 label_pos = {
+            padding + hearts_to_draw * (ICON_SIZE + padding),
+            offset_y + ICON_SIZE * 0.25f
+        };
+        DrawTextEx(menu_font, extra_lives_label.c_str(), label_pos, ICON_SIZE * 0.5f, 1.0f, WHITE);
+    }
 
-    int total_score = PlayerController::getTotalScore();
-    Vector2 score_dim = MeasureTextEx(menu_font, std::to_string(total_score).c_str(), ICON_SIZE, 2.0f);
-    Vector2 score_pos = {static_cast<float>(GetRenderWidth()) - score_dim.x - ICON_SIZE, offset_y};
-    DrawTextEx(menu_font, std::to_string(total_score).c_str(), score_pos, ICON_SIZE, 2.0f, WHITE);
-    draw_sprite(coin_sprite, {static_cast<float>(GetRenderWidth()) - ICON_SIZE, offset_y}, ICON_SIZE);
+    // --- Draw timer ---
+    std::string timer_text = std::to_string(timer / 60);
+    Vector2 timer_dim = MeasureTextEx(menu_font, timer_text.c_str(), ICON_SIZE * 0.5f, 1.0f);
+    Vector2 timer_pos = {
+        GetRenderWidth() - timer_dim.x - padding,
+        offset_y
+    };
+    DrawTextEx(menu_font, timer_text.c_str(), timer_pos, ICON_SIZE * 0.5f, 1.0f, WHITE);
+
+    // --- Draw score and coin sprite ---
+    int total_score = PlayerController::getInstance().getTotalScore();
+    std::string score_text = std::to_string(total_score);
+    Vector2 score_dim = MeasureTextEx(menu_font, score_text.c_str(), ICON_SIZE * 0.5f, 1.0f);
+    Vector2 score_pos = {
+        GetRenderWidth() - score_dim.x - ICON_SIZE - padding * 2,
+        offset_y + ICON_SIZE * 0.7f
+    };
+    DrawTextEx(menu_font, score_text.c_str(), score_pos, ICON_SIZE * 0.5f, 1.0f, WHITE);
+
+    Vector2 coin_pos = {
+        score_pos.x - ICON_SIZE - padding,
+        score_pos.y
+    };
+    draw_sprite(coin_sprite, coin_pos, ICON_SIZE);
 }
+
+
 
 void Graphics::draw_menu() {
     draw_text(game_title);

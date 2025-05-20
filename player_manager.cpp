@@ -44,6 +44,7 @@ void PlayerController::spawnPlayer() {
             if (Level::get_level_cell(row, col) == PLAYER) {
                 Player::getInstance().setPosX(static_cast<float>(col));
                 Player::getInstance().setPosY(static_cast<float>(row));
+                player_y_velocity = 0.0f; // Ensure vertical speed is reset
                 LevelManager::setLevelCell(row, col, AIR);
                 return;
             }
@@ -54,17 +55,17 @@ void PlayerController::spawnPlayer() {
 // Moves the player horizontally if no wall collision is detected
 void PlayerController::moveHorizontally(float delta) {
     Player& player = Player::getInstance();
+
     float nextX = player.posX() + delta;
 
     if (!LevelManager::isColliding({nextX, player.posY()}, WALL)) {
         player.setPosX(nextX);
     } else {
-        player.setPosX(roundf(player.posX()));
-        return;
+        player.setPosX(floorf(player.posX()));
     }
 
-    player.setLookingForward(delta > 0);
-    if (delta != 0.0f) player.setMoving(true);
+    Player::getInstance().setLookingForward(delta > 0);
+    if (delta != 0) Player::getInstance().setMoving(true);
 }
 
 // Updates all player logic, including movement, interaction, and survival
