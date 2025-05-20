@@ -32,6 +32,7 @@ void update_game() {
                 PlayerController::moveHorizontally(-Physics::PLAYER_MOVEMENT_SPEED);
             }
 
+
         PlayerController::updatePlayer();
 
         if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_SPACE)) && Player::getInstance().isOnGround()) {
@@ -39,6 +40,13 @@ void update_game() {
         }
 
         EnemiesControl::getInstance().updateEnemies();
+
+        if (LevelManager::getCollider(
+        { Player::getInstance().posX(), Player::getInstance().posY() }, EXIT) == EXIT) {
+            PlaySound(exit_sound);
+            LevelManager::getInstanceLevel().loadLevel(1);  // load next level
+            return;
+        }
 
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = Game::State::PAUSED;
