@@ -15,6 +15,6 @@ inline constexpr char COIN      = '*';
 inline constexpr char EXIT      = 'E';
 
 #pragma once
-extern int game_frame = 0;
+extern int game_frame;
 
 #endif // GLOBALS_H

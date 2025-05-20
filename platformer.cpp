@@ -10,6 +10,8 @@
 
 using namespace Game;
 
+int game_frame = 0;
+
 void update_game() {
     game_frame++;
 
