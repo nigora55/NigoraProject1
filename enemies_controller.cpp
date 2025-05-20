@@ -2,8 +2,14 @@
 #include "level_manager.h"
 #include "level_manager.cpp"
 #include "globals.h"
+#include "physics.h"
+#include "images.h"
+#include "graphics.h"
 #include <algorithm>
 #include <raylib.h>
+
+using namespace Physics;
+using namespace Graphics;
 
 void EnemiesControl::spawnEnemies() {
     enemies.clear();
