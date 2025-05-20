@@ -3,35 +3,20 @@
 
 #include "globals.h"
 
-class Enemy
-{
+class Enemy {
 public:
-    Enemy(const Vector2 &pos, const bool is_looking_right):
-        pos{pos}, looking_right{is_looking_right} { }
+    Enemy(const Vector2 &position, const bool facingRight)
+     : pos{position}, lookingRight{facingRight} { }
 
-    [[nodiscard]] Vector2 get_pos() const
-    {
-        return pos;
-    }
+    [[nodiscard]] Vector2 getPos() const noexcept { return pos; }
+    [[nodiscard]] bool isLookingRight() const noexcept { return lookingRight; }
 
-    [[nodiscard]] bool is_looking_right() const
-    {
-        return looking_right;
-    }
-
-    void set_pos(const Vector2& pos)
-    {
-        this->pos = pos;
-    }
-
-    void set_looking_right(bool looking_right)
-    {
-        this->looking_right = looking_right;
-    }
+    void setPos(const Vector2& position) noexcept { pos = position; }
+    void setLookingRight(bool direction) noexcept { lookingRight = direction; }
 
 private:
-    Vector2 pos;
-    bool looking_right;
+    Vector2 pos{};
+    bool lookingRight = true;
 };
 
 #endif //ENEMY_H

@@ -1,45 +1,44 @@
 #ifndef LEVEL_H
 #define LEVEL_H
+#include <cstddef>
 
-#include "enemies_controller.h"
-#include "globals.h"
-
-inline const char WALL      = '#',
-                  WALL_DARK = '=',
-                  AIR       = '-',
-                  SPIKE     = '^',
-                  PLAYER    = '@',
-                  ENEMY     = '&',
-                  COIN      = '*',
-                  EXIT      = 'E';
-
-/* Levels */
-
-struct level {
-    size_t rows = 0, columns = 0;
-    std::vector <char> data;
-};
-
+class LevelController;
 class Level {
-private:
-   int index;
-   int count;
-    std::vector <level> levels;
-    level current_level;
-    std::vector <char> current_level_data;
-
 public:
-    char& get_level_cell(size_t row, size_t column);
-    void set_level_cell(size_t row, size_t column, char chr);
-    char& get_collider(Vector2 pos, char look_for);
-    bool is_inside_level(int row, int column);
-    bool is_colliding(Vector2 pos, char look_for);
-    void reset_level_index();
-    void load_level(int offset = 0);
-    void unload_level();
+    Level(const size_t rows, const size_t columns, char* data)
+    : rows(rows), columns(columns), data(data) {};
 
-    Level (std::string path);
+    Level() : rows{0}, columns{0}, data(nullptr) {};
+
+    [[nodiscard]] size_t get_rows() const {
+        return rows;
+    }
+
+    void set_rows(size_t rows) {
+        this->rows = rows;
+    }
+
+    [[nodiscard]] size_t get_columns() const {
+        return columns;
+    }
+
+    void set_columns(size_t columns) {
+        this->columns = columns;
+    }
+
+    [[nodiscard]] const char* get_data() const {
+        return data;
+    }
+    void set_data(char *data) {
+        this->data = data;
+    }
+
+    static char& get_level_cell(size_t row, size_t column);
+
+private:
+    size_t rows;
+    size_t columns;
+    char *data = nullptr;
 };
-
 
 #endif //LEVEL_H

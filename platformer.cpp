@@ -1,12 +1,9 @@
 #include "raylib.h"
-
 #include "globals.h"
-#include "level.h"
 #include "player.h"
-#include "enemy.h"
 #include "graphics.h"
-#include "assets.h"
-#include "utilities.h"
+#include "enemies_controller.h"
+#include "level_manager.h"
 
 void update_game() {
     game_frame++;
@@ -16,27 +13,32 @@ void update_game() {
             if (IsKeyPressed(KEY_ENTER)) {
                 SetExitKey(0);
                 game_state = GAME_STATE;
-                load_level(0);
+                LevelManager::getInstanceLevel().loadLevel(0);
             }
             break;
 
         case GAME_STATE:
-            if (IsKeyDown(KEY_RIGHT) | IsKeyDown(KEY_D)) {
-                move_player_horizontally(PLAYER_MOVEMENT_SPEED);
+            if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
+                PlayerController::getInstance().moveHorizontally(PLAYER_MOVEMENT_SPEED);
             }
 
-            if (IsKeyDown(KEY_LEFT) | IsKeyDown(KEY_A)) {
-                move_player_horizontally(-PLAYER_MOVEMENT_SPEED);
+            if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) {
+                PlayerController::getInstance().moveHorizontally(-PLAYER_MOVEMENT_SPEED);
             }
 
             // Calculating collisions to decide whether the player is allowed to jump
-            is_player_on_ground = is_colliding({player_pos.x, player_pos.y + 0.1f}, WALL);
-            if ((IsKeyDown(KEY_UP) | IsKeyDown(KEY_W) | IsKeyDown(KEY_SPACE)) && is_player_on_ground) {
+        Player::getInstance().set_is_player_on_ground(
+        LevelManager::getInstanceLevel().isColliding(
+    {Player::getInstance().posX(), Player::getInstance().posY() + 0.1f},
+    WALL
+            )
+        );
+            if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) || IsKeyDown(KEY_SPACE)) && Player::getInstance().isOnGround()) {
                 player_y_velocity = -JUMP_STRENGTH;
             }
 
-            update_player();
-            EnemiesController::get_instance().update_enemies();
+            PlayerController::getInstance().updatePlayer();
+            EnemiesControl::getInstance().updateEnemies();
 
             if (IsKeyPressed(KEY_ESCAPE)) {
                 game_state = PAUSED_STATE;
@@ -50,11 +52,11 @@ void update_game() {
             break;
 
         case DEATH_STATE:
-            update_player_gravity();
+            Player::getInstance().updateGravity();
 
             if (IsKeyPressed(KEY_ENTER)) {
                 if (player_lives > 0) {
-                    load_level(0);
+                    LevelManager::getInstanceLevel().loadLevel(0);
                     game_state = GAME_STATE;
                 }
                 else {
@@ -66,17 +68,17 @@ void update_game() {
 
         case GAME_OVER_STATE:
             if (IsKeyPressed(KEY_ENTER)) {
-                reset_level_index();
-                reset_player_stats();
+                LevelManager::getInstanceLevel().resetLevelIndex();
+                PlayerController::getInstance().resetStats();
                 game_state = GAME_STATE;
-                load_level(0);
+                LevelManager::getInstanceLevel().loadLevel();
             }
             break;
 
         case VICTORY_STATE:
             if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
-                reset_level_index();
-                reset_player_stats();
+                LevelManager::getInstanceLevel().resetLevelIndex();
+                PlayerController::getInstance().resetStats();
                 game_state = MENU_STATE;
                 SetExitKey(KEY_ESCAPE);
             }
@@ -94,7 +96,7 @@ void draw_game() {
         case GAME_STATE:
             ClearBackground(BLACK);
             draw_parallax_background();
-            draw_level();
+            LevelManager::getInstanceLevel().drawLevel();
             draw_game_overlay();
             break;
 
@@ -128,7 +130,8 @@ int main() {
     load_fonts();
     load_images();
     load_sounds();
-    load_level();
+    LevelManager::getInstanceLevel().loadLevelsFromFile("data/levels.rll");
+    LevelManager::getInstanceLevel().loadLevel();
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -139,7 +142,8 @@ int main() {
         EndDrawing();
     }
 
-    unload_level();
+
+    LevelManager::getInstanceLevel().unloadLevel();
     unload_sounds();
     unload_images();
     unload_fonts();

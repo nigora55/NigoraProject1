@@ -2,15 +2,23 @@
 #define GLOBALS_H
 
 #include "raylib.h"
-
-#include <vector>
 #include <string>
 #include <cstddef>
-#include <cmath>
 
 /* Game Elements */
 
+inline const char WALL      = '#',
+                  WALL_DARK = '=',
+                  AIR       = '-',
+                  SPIKE     = '^',
+                  PLAYER    = '@',
+                  ENEMY     = '&',
+                  COIN      = '*',
+                  EXIT      = 'E';
 
+inline int level_index = 0;
+inline const int LEVEL_COUNT = 4;
+//
 
 
 /* Timer-mechanic related */
@@ -29,16 +37,13 @@ inline const float GRAVITY_FORCE         = 0.01f;
 
 /* Player data */
 
+inline float player_y_velocity = 0;
 
+inline int player_level_scores[LEVEL_COUNT];
 
-/* Enemy data */
+inline const int MAX_PLAYER_LIVES = 40;
+inline int player_lives = MAX_PLAYER_LIVES;
 
-// struct Enemy {
-//     Vector2 pos;
-//     bool is_looking_right;
-// };
-//
-// inline std::vector<Enemy> enemies;
 
 /* Graphic Metrics */
 
@@ -211,8 +216,8 @@ inline game_state game_state = MENU_STATE;
 void draw_text(Text &text);
 void derive_graphics_metrics_from_loaded_level();
 void draw_game_overlay();
-void draw_level();
-void draw_player();
+//void draw_level();
+//void draw_player();
 void draw_enemies();
 void draw_menu();
 
@@ -224,33 +229,6 @@ void create_victory_menu_background();
 void animate_victory_menu_background();
 void draw_victory_menu_background();
 void draw_victory_menu();
-
-// LEVEL_H
-
-
-// PLAYER_H
-
-void reset_player_stats();
-void increment_player_score();
-int get_total_player_score();
-
-void spawn_player();
-void kill_player();
-
-void move_player_horizontally(float delta);
-void update_player();
-void update_player_gravity();
-
-// ENEMY_H
-
-void spawn_enemies();
-
-void update_enemies();
-
-bool is_colliding_with_enemies(Vector2 pos);
-void remove_colliding_enemy(Vector2 pos);
-
-// ASSETS_H
 
 void load_fonts();
 void unload_fonts();

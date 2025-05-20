@@ -3,17 +3,11 @@
 
 #include <vector>
 #include <raylib.h>
-
 #include "enemy.h"
 
 class EnemiesControl {
 public:
-    [[nodiscard]] std::vector<Enemy> get_enemies() {
-        return enemies;
-    }
-
-    static EnemiesControl &get_instance() //function to create one array of enemies by returning 1 instance, return by ref since no copies are allowed for singleton
-    {
+    static EnemiesControl &getInstance() {
         static EnemiesControl instance; //static variable becomes global variable, but it is reachable just inside its scope
         return instance;
     }
@@ -23,21 +17,20 @@ public:
     EnemiesControl& operator=(const EnemiesControl& other) = delete;
     EnemiesControl& operator=(EnemiesControl&& other)      = delete;
 
-    [[nodiscard]] std::vector<Enemy> get_enemies() const
-    {
-        return enemies;
-    }
+    void spawnEnemies();
+    void updateEnemies();
+    void removeCollidingEnemy(Vector2 pos);
 
-    void spawn_enemies();
-    void update_enemies();
-    bool is_colliding_with_enemies(Vector2 pos) const;
-    void remove_colliding_enemy(Vector2 pos);
-    static void draw_enemies();
+    [[nodiscard]] std::vector<Enemy> getEnemies() { return enemies; }
+    [[nodiscard]] bool isCollidingWithEnemies(Vector2 pos) const;
+
+    static void drawEnemies();
 
 private:
     EnemiesControl()  = default;
     ~EnemiesControl() = default;
-    std::vector<Enemy> enemies{ };
+
+    std::vector<Enemy> enemies{};
 };
 
 
