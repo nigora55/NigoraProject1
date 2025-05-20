@@ -2,7 +2,9 @@
 #include "game_state.h"
 #include "images.h"
 #include "player_manager.h"
+#include "player.h"
 #include "level_manager.h"
+#include "globals.h"
 #include "utilities.h"
 
 using namespace Graphics;
@@ -88,6 +90,18 @@ void Graphics::animate_victory_menu_background() {
         ball.y += ball.dy;
         if (ball.y - ball.radius < 0 || ball.y + ball.radius >= screen_size.y) ball.dy = -ball.dy;
     }
+}
+
+void Graphics::draw_parallax_background() {
+    // Example implementation using scrolling effect
+    float scrollOffset = fmod(Player::getInstance().posX() * 0.2f + game_frame * 0.01f, background_size.x);
+
+    // Background layers loop seamlessly
+    Vector2 pos1 = { -scrollOffset, background_y_offset };
+    Vector2 pos2 = { background_size.x - scrollOffset, background_y_offset };
+
+    Graphics::draw_image(background, pos1, background_size.x, background_size.y);
+    Graphics::draw_image(background, pos2, background_size.x, background_size.y);
 }
 
 void Graphics::draw_victory_menu_background() {

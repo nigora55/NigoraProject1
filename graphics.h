@@ -61,6 +61,7 @@ namespace Graphics {
     void draw_victory_menu_background();
     void create_victory_menu_background();
     void animate_victory_menu_background();
+    void draw_parallax_background();
     void derive_graphics_metrics_from_loaded_level();
     void draw_image(const Texture2D& image, Vector2 pos, float width, float height);
     void draw_image(const Texture2D& image, Vector2 pos, float size);
