@@ -94,8 +94,6 @@ void update_game() {
 }
 
 void draw_game() {
-
-
     switch (game_state) {
         case State::MENU:
             ClearBackground(BLACK);

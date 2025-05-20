@@ -32,8 +32,6 @@ extern sprite coin_sprite;
 // Sounds
 extern Sound coin_sound, exit_sound, player_death_sound, kill_enemy_sound, game_over_sound;
 
-// Font
-extern Font menu_font;
 
 // Functions
 void load_fonts();

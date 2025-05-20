@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace Graphics {
-    inline const float SCREEN_SCALE_DIVISOR = 700.0f;
+    inline constexpr float SCREEN_SCALE_DIVISOR = 700.0f;
     inline Vector2 screen_size;
     inline float screen_scale;
     inline float cell_size;

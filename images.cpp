@@ -6,7 +6,6 @@
 #include <cassert>
 #include <sstream>
 
-
 using namespace Graphics;
 using namespace Game;
 

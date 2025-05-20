@@ -9,7 +9,7 @@ namespace Game {
     inline int timer = MAX_LEVEL_TIME;
     inline int time_to_coin_counter = 0;
 
-    inline constexpr int MAX_PLAYER_LIVES = 40;
+    inline constexpr int MAX_PLAYER_LIVES = 5;
     inline int player_lives = MAX_PLAYER_LIVES;
     inline int player_level_scores[LEVEL_COUNT];
 
