@@ -5,7 +5,13 @@
 #include "globals.h"
 #include "player.h"
 #include "player_manager.h"
+#include "game_state.h"
+#include "graphics.h"
+#include "images.h"
 #include <fstream>
+
+using namespace Game;
+using namespace Graphics;
 
 bool LevelManager::isInsideLevel(int row, int column) {
     const auto& level = getInstanceLevel().getCurrentLevel();
@@ -54,7 +60,7 @@ void LevelManager::loadLevel(int offset) {
     level_index += offset;
 
     if (level_index >= LEVEL_COUNT) {
-        game_state = VICTORY_STATE;
+        game_state = State::VICTORY;
         create_victory_menu_background();
         level_index = 0;
         return;
@@ -94,11 +100,11 @@ void LevelManager::drawLevel() {
             };
 
             switch (Level::get_level_cell(row, col)) {
-                case WALL:        draw_image(wall_image, pos, cell_size); break;
-                case WALL_DARK:   draw_image(wall_dark_image, pos, cell_size); break;
-                case SPIKE:       draw_image(spike_image, pos, cell_size); break;
+                case WALL:        Graphics::draw_image(wall_image, pos, cell_size); break;
+                case WALL_DARK:   Graphics::draw_image(wall_dark_image, pos, cell_size); break;
+                case SPIKE:       Graphics::draw_image(spike_image, pos, cell_size); break;
                 case COIN:        draw_sprite(coin_sprite, pos, cell_size); break;
-                case EXIT:        draw_image(exit_image, pos, cell_size); break;
+                case EXIT:        Graphics::draw_image(exit_image, pos, cell_size); break;
                 default: break;
             }
         }
