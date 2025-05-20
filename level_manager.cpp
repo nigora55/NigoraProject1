@@ -13,6 +13,8 @@
 using namespace Game;
 using namespace Graphics;
 
+std::vector<Level> LevelManager::LEVELS;
+
 bool LevelManager::isInsideLevel(int row, int column) {
     const auto& level = getInstanceLevel().getCurrentLevel();
     return row >= 0 && row < static_cast<int>(level.get_rows()) &&

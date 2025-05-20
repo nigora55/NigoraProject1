@@ -11,12 +11,11 @@
 using namespace Game;
 
 int game_frame = 0;
-
 void update_game() {
     game_frame++;
 
     switch (game_state) {
-        case Game::State::MENU:
+        case State::MENU:
             if (IsKeyPressed(KEY_ENTER)) {
                 SetExitKey(0);
                 game_state = Game::State::GAME;
@@ -24,7 +23,7 @@ void update_game() {
             }
             break;
 
-        case Game::State::GAME:
+        case State::GAME:
             if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) {
                 PlayerController::getInstance().moveHorizontally(Physics::PLAYER_MOVEMENT_SPEED);
             }
@@ -93,21 +92,21 @@ void update_game() {
 }
 
 void draw_game() {
+
+
     switch (game_state) {
-        case Game::State::MENU:
+        case State::MENU:
             ClearBackground(BLACK);
             Graphics::draw_menu();
             break;
 
-        case Game::State::GAME:
-            ClearBackground(BLACK);
+        case State::GAME:
             Graphics::draw_parallax_background();
             LevelManager::getInstanceLevel().drawLevel();
             Graphics::draw_game_overlay();
             break;
 
-        case Game::State::DEATH:
-            ClearBackground(BLACK);
+        case State::DEATH:
             Graphics::draw_death_screen();
             break;
 
@@ -116,12 +115,12 @@ void draw_game() {
             Graphics::draw_game_over_menu();
             break;
 
-        case Game::State::PAUSED:
+        case State::PAUSED:
             ClearBackground(BLACK);
             Graphics::draw_pause_menu();
             break;
 
-        case Game::State::VICTORY:
+        case State::VICTORY:
             Graphics::draw_victory_menu();
             break;
     }

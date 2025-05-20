@@ -1,6 +1,6 @@
 #include "enemies_controller.h"
 #include "level_manager.h"
-#include "level_manager.cpp"
+#include "player.h"
 #include "globals.h"
 #include "physics.h"
 #include "images.h"

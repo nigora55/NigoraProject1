@@ -10,17 +10,22 @@
 using namespace Graphics;
 using namespace Game;
 
-
 void Graphics::draw_text(const Text &text) {
+    if (!text.font) return;
+
     Vector2 dimensions = MeasureTextEx(*text.font, text.str.c_str(), text.size * screen_scale, text.spacing);
     Vector2 pos = {
         (screen_size.x * text.position.x) - (0.5f * dimensions.x),
         (screen_size.y * text.position.y) - (0.5f * dimensions.y)
     };
+
     DrawTextEx(*text.font, text.str.c_str(), pos, text.size * screen_scale, text.spacing, text.color);
 }
 
+
 void Graphics::derive_graphics_metrics_from_loaded_level() {
+    if (LevelManager::getInstanceLevel().getLevels().empty()) return;
+
     screen_size = {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
     cell_size = screen_size.y / static_cast<float>(LevelManager::getInstanceLevel().getCurrentLevel().get_rows());
     screen_scale = std::min(screen_size.x, screen_size.y) / SCREEN_SCALE_DIVISOR;
@@ -118,11 +123,15 @@ void Graphics::draw_victory_menu() {
     draw_text(victory_subtitle);
 }
 
-void Graphics::draw_image(const Texture2D& image, Vector2 pos, float width, float height) {
-    DrawTexturePro(image, {0, 0, static_cast<float>(image.width), static_cast<float>(image.height)},
-                   {pos.x, pos.y, width, height}, {0, 0}, 0, WHITE);
-}
+// In graphics.cpp
+namespace Graphics {
+    void draw_image(const Texture2D& image, Vector2 pos, float width, float height) {
+        Rectangle source = { 0.0f, 0.0f, static_cast<float>(image.width), static_cast<float>(image.height) };
+        Rectangle dest   = { pos.x, pos.y, width, height };
+        DrawTexturePro(image, source, dest, {0, 0}, 0.0f, WHITE);
+    }
 
-void Graphics::draw_image(const Texture2D& image, Vector2 pos, float size) {
-    Graphics::draw_image(image, pos, size, size);
+    void draw_image(const Texture2D& image, Vector2 pos, float size) {
+        Graphics::draw_image(image, pos, size, size);
+    }
 }

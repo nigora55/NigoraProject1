@@ -109,30 +109,44 @@ sprite load_sprite(const std::string& prefix, const std::string& suffix, size_t 
 }
 
 void unload_sprite(sprite& spr) {
-    assert(spr.frames);
-    for (size_t i = 0; i < spr.frame_count; ++i) {
-        UnloadTexture(spr.frames[i]);
+    if (!spr.frames) return;  // Prevent crash if already null or never allocated
 
+    for (size_t i = 0; i < spr.frame_count; ++i) {
+        if (spr.frames[i].id > 0) { // Only unload if the texture was actually loaded
+            UnloadTexture(spr.frames[i]);
+        }
     }
+
     delete[] spr.frames;
     spr.frames = nullptr;
+
+    // Reset other fields for safety (optional)
+    spr.frame_count = 0;
+    spr.frame_index = 0;
+    spr.frames_skipped = 0;
+    spr.frames_to_skip = 0;
+    spr.loop = false;
+    spr.prev_game_frame = 0;
 }
+
 
 void draw_sprite(sprite& spr, Vector2 pos, float size) {
     draw_sprite(spr, pos, size, size);
 }
 
 void draw_sprite(sprite& spr, Vector2 pos, float width, float height) {
-    Graphics::draw_image(spr.frames[spr.frame_index], pos, width, height);
+    if (!spr.frames || spr.frame_count == 0) return;
+    if (spr.frame_index >= spr.frame_count) spr.frame_index = 0;
 
+    Graphics::draw_image(spr.frames[spr.frame_index], pos, width, height);
 
     if (spr.prev_game_frame == game_frame) return;
 
     if (spr.frames_skipped < spr.frames_to_skip) {
-        ++spr.frames_skipped;
+        spr.frames_skipped++;
     } else {
         spr.frames_skipped = 0;
-        ++spr.frame_index;
+        spr.frame_index++;
         if (spr.frame_index >= spr.frame_count) {
             spr.frame_index = spr.loop ? 0 : spr.frame_count - 1;
         }
