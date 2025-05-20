@@ -4,6 +4,14 @@
 #include  "enemies_controller.h"
 #include "level.h"
 #include "level_manager.h"
+#include "graphics.h"
+#include "images.h"
+#include "game_state.h"
+#include "physics.h"
+
+using namespace Graphics;
+using namespace Game;
+using namespace Physics;
 
 // reset plyer stats for a new game or level reset
 void PlayerController::resetStats() {
@@ -62,13 +70,13 @@ void PlayerController::moveHorizontally(float delta) {
 // Updates all player logic, including movement, interaction, and survival
 void PlayerController::updatePlayer() {
     Player& player = Player::getInstance();
-    player.updateGravity();
+    Player::updateGravity();
 
     Vector2 pos = player.position();
 
     // Coin pickup
     if (LevelManager::isColliding(pos, COIN)) {
-        LevelManager::getInstanceLevel().getCollider(pos, COIN) = AIR;
+        LevelManager::getCollider(pos, COIN) = AIR;
         PlayerController::incrementScore();
     }
 
@@ -117,24 +125,24 @@ void PlayerController::drawPlayer() {
         player.posY() * cell_size
     };
 
-    if (game_state == GAME_STATE) {
+    if (game_state == State::GAME) {
         if (!player.isOnGround()) {
-            draw_image(player.isLookingForward() ? player_jump_forward_image : player_jump_backwards_image, drawPos, cell_size);
+            Graphics::draw_image(player.isLookingForward() ? player_jump_forward_image : player_jump_backwards_image, drawPos, cell_size);
         } else if (player.isMoving()) {
             draw_sprite(player.isLookingForward() ? player_walk_forward_sprite : player_walk_backwards_sprite, drawPos, cell_size);
             Player::getInstance().setMoving(false);
         } else {
-            draw_image(player.isLookingForward() ? player_stand_forward_image : player_stand_backwards_image, drawPos, cell_size);
+            Graphics::draw_image(player.isLookingForward() ? player_stand_forward_image : player_stand_backwards_image, drawPos, cell_size);
         }
     } else {
-        draw_image(player_dead_image, drawPos, cell_size);
+        Graphics::draw_image(player_dead_image, drawPos, cell_size);
     }
 }
 
 void PlayerController::killPlayer() {
     // Decrement a life and reset all collected coins in the current level
     PlaySound(player_death_sound);
-    game_state = DEATH_STATE;
+    game_state = State::DEATH;
     player_lives--;
     player_level_scores[level_index] = 0;
 }

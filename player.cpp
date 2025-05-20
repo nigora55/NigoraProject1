@@ -1,5 +1,8 @@
 #include "player.h"
 #include "globals.h"
+#include "physics.h"
+
+using namespace Physics;
 
 void Player::updateGravity() {
     Player& player = Player::getInstance();

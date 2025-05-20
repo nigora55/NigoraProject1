@@ -29,7 +29,7 @@ public:
     [[nodiscard]] bool isMoving() const noexcept { return moves; }
     void setMoving(bool value) noexcept { moves = value; }
 
-    void updateGravity();
+    static void updateGravity();
 
 private:
     Player()  = default;
