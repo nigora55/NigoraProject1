@@ -1,19 +1,17 @@
 #include "graphics.h"
 #include "game_state.h"
-#include "images.h"
 #include "player_manager.h"
 #include "player.h"
 #include "level_manager.h"
 #include "globals.h"
+#include "assets.h"
 #include "utilities.h"
 
 using namespace Graphics;
 using namespace Game;
 
-namespace Graphics {
-void draw_text(const Text &text) {
-    if (!text.font) return;
-
+void Graphics::draw_text(const Text &text) {
+    if (!text.font || text.font->texture.id == 0) return;
     Vector2 dimensions = MeasureTextEx(*text.font, text.str.c_str(), text.size * screen_scale, text.spacing);
     Vector2 pos = {
         (screen_size.x * text.position.x) - (0.5f * dimensions.x),
@@ -24,7 +22,9 @@ void draw_text(const Text &text) {
 }
 
 
-void derive_graphics_metrics_from_loaded_level() {
+
+
+void Graphics::derive_graphics_metrics_from_loaded_level() {
     if (LevelManager::getLevels().empty()) return;
 
     screen_size = {static_cast<float>(GetScreenWidth()), static_cast<float>(GetScreenHeight())};
@@ -35,7 +35,7 @@ void derive_graphics_metrics_from_loaded_level() {
     background_y_offset = (screen_size.y - background_size.y) * 0.5f;
 }
 
-void draw_game_overlay() {
+void Graphics::draw_game_overlay() {
     const float ICON_SIZE = 48.0f * screen_scale;
     const float offset_y = 8.0f * screen_scale;
     const float padding = 4.0f * screen_scale;
@@ -84,19 +84,19 @@ void draw_game_overlay() {
         score_pos.y
     };
     if (coin_sprite.frames && coin_sprite.frame_count > 0)
-        draw_sprite(coin_sprite, coin_pos, ICON_SIZE);
+        drawSprite(coin_sprite, coin_pos, ICON_SIZE);
 }
 
-void draw_menu() {
+void Graphics::draw_menu() {
     draw_text(game_title);
     draw_text(game_subtitle);
 }
 
-void draw_pause_menu() {
+void Graphics::draw_pause_menu() {
     draw_text(game_paused);
 }
 
-void draw_death_screen() {
+void Graphics::draw_death_screen() {
     draw_victory_menu_background();
     LevelManager::drawLevel();
     draw_game_overlay();
@@ -105,12 +105,12 @@ void draw_death_screen() {
     draw_text(death_subtitle);
 }
 
-void draw_game_over_menu() {
+void Graphics::draw_game_over_menu() {
     draw_text(game_over_title);
     draw_text(game_over_subtitle);
 }
 
-void create_victory_menu_background() {
+void Graphics::create_victory_menu_background() {
     for (auto &ball : victory_balls) {
         ball.x  = rand_up_to(screen_size.x);
         ball.y  = rand_up_to(screen_size.y);
@@ -122,7 +122,7 @@ void create_victory_menu_background() {
     EndDrawing(); BeginDrawing(); ClearBackground(BLACK); EndDrawing(); BeginDrawing();
 }
 
-void animate_victory_menu_background() {
+void Graphics::animate_victory_menu_background() {
     for (auto &ball : victory_balls) {
         ball.x += ball.dx;
         if (ball.x - ball.radius < 0 || ball.x + ball.radius >= screen_size.x) ball.dx = -ball.dx;
@@ -131,7 +131,7 @@ void animate_victory_menu_background() {
     }
 }
 
-void draw_parallax_background() {
+void Graphics::draw_parallax_background() {
     // Example implementation using scrolling effect
     auto scrollOffset = static_cast<float>(
     fmodf(Player::getInstance().posX() * 0.2f + static_cast<float>(game_frame) * 0.01f, background_size.x)
@@ -145,13 +145,13 @@ void draw_parallax_background() {
     Graphics::draw_image(background, pos2, background_size.x, background_size.y);
 }
 
-void draw_victory_menu_background() {
+void Graphics::draw_victory_menu_background() {
     for (auto &ball : victory_balls) {
         DrawCircleV({ball.x, ball.y}, ball.radius, VICTORY_BALL_COLOR);
     }
 }
 
-void draw_victory_menu() {
+void Graphics::draw_victory_menu() {
     DrawRectangle(0, 0, static_cast<int>(screen_size.x), static_cast<int>(screen_size.y), {0, 0, 0, VICTORY_BALL_TRAIL_TRANSPARENCY});
     animate_victory_menu_background();
     draw_victory_menu_background();
@@ -160,13 +160,12 @@ void draw_victory_menu() {
 }
 
 
-    void draw_image(const Texture2D& image, Vector2 pos, float width, float height) {
+    void Graphics::draw_image(const Texture2D& image, Vector2 pos, float width, float height) {
         Rectangle source = { 0.0f, 0.0f, static_cast<float>(image.width), static_cast<float>(image.height) };
         Rectangle dest   = { pos.x, pos.y, width, height };
         DrawTexturePro(image, source, dest, {0, 0}, 0.0f, WHITE);
     }
 
-    void draw_image(const Texture2D& image, Vector2 pos, float size) {
+    void Graphics::draw_image(const Texture2D& image, Vector2 pos, float size) {
         Graphics::draw_image(image, pos, size, size);
     }
-}

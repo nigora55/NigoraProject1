@@ -5,9 +5,9 @@
 #include "level.h"
 #include "level_manager.h"
 #include "graphics.h"
-#include "images.h"
 #include "game_state.h"
 #include "physics.h"
+#include "assets.h"
 
 using namespace Graphics;
 using namespace Game;
@@ -130,7 +130,7 @@ void PlayerController::drawPlayer() {
         if (!player.isOnGround()) {
             Graphics::draw_image(player.isLookingForward() ? player_jump_forward_image : player_jump_backwards_image, drawPos, cell_size);
         } else if (player.isMoving()) {
-            draw_sprite(player.isLookingForward() ? player_walk_forward_sprite : player_walk_backwards_sprite, drawPos, cell_size);
+            drawSprite(player.isLookingForward() ? player_walk_forward_sprite : player_walk_backwards_sprite, drawPos, cell_size);
             Player::getInstance().setMoving(false);
         } else {
             Graphics::draw_image(player.isLookingForward() ? player_stand_forward_image : player_stand_backwards_image, drawPos, cell_size);

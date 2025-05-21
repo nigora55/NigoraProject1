@@ -2,9 +2,10 @@
 #define GRAPHICS_H
 
 #include "raylib.h"
+#include "globals.h"
 #include <string>
 #include <vector>
-
+#pragma once
 namespace Graphics {
     inline constexpr float SCREEN_SCALE_DIVISOR = 700.0f;
     inline Vector2 screen_size;
@@ -29,28 +30,6 @@ namespace Graphics {
 
     inline std::vector<VictoryBall> victory_balls(50);
 
-    struct Text {
-        std::string str;
-        Vector2 position = {0.5f, 0.5f};
-        float size = 32.0f;
-        Color color = WHITE;
-        float spacing = 4.0f;
-        Font* font = nullptr;
-    };
-
-    // Fonts and UI text
-    inline Font menu_font;
-    inline Text game_title = {"Platformer", {0.5f, 0.5f}, 100.0f, RED, 4.0f, &menu_font};
-    inline Text game_subtitle = {"Press Enter to Start", {0.5f, 0.65f}};
-    inline Text game_paused = {"Press Escape to Resume"};
-    inline Text death_title = {"You Died!", {0.5f, 0.5f}, 80.0f, RED};
-    inline Text death_subtitle = {"Press Enter to Try Again", {0.5f, 0.65f}};
-    inline Text game_over_title = {"Game Over", {0.5f, 0.5f}, 120.0f, RED};
-    inline Text game_over_subtitle = {"Press Enter to Restart", {0.5f, 0.675f}};
-    inline Text victory_title = {"You Won!", {0.5f, 0.5f}, 100.0f, RED};
-    inline Text victory_subtitle = {"Press Enter to go back to menu", {0.5f, 0.65f}};
-
-    // Functions
     void draw_text(const Text &text);
     void draw_game_overlay();
     void draw_menu();

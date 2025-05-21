@@ -14,20 +14,19 @@ add_executable(platformer
         platformer.cpp
         player.cpp
         graphics.cpp
-        images.cpp
         enemies_controller.cpp
         level_manager.cpp
+        player_manager.cpp
+        assets.cpp
 
         globals.h
         graphics.h
         level.h
         player_manager.h
         enemy.h
-        images.h
         utilities.h
         enemies_controller.h
         level_manager.h
-        player_manager.cpp
         physics.h
         game_state.h
         assets.h

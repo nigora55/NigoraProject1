@@ -4,13 +4,14 @@
 #include "enemies_controller.h"
 #include "player_manager.h"
 #include "level_manager.h"
-#include "images.h"
 #include "game_state.h"
 #include "physics.h"
+#include "assets.h"
 
 using namespace Game;
+using namespace Physics;
+using namespace Graphics;
 
-int game_frame = 0;
 void update_game() {
     game_frame++;
 
@@ -95,18 +96,19 @@ void update_game() {
 
 void draw_game() {
     switch (game_state) {
-        case State::MENU:
+        case Game::State::MENU:
             ClearBackground(BLACK);
             Graphics::draw_menu();
             break;
 
-        case State::GAME:
+        case Game::State::GAME:
+            ClearBackground(BLACK);
             Graphics::draw_parallax_background();
             LevelManager::drawLevel();
             Graphics::draw_game_overlay();
             break;
 
-        case State::DEATH:
+        case Game::State::DEATH:
             Graphics::draw_death_screen();
             break;
 
@@ -115,12 +117,12 @@ void draw_game() {
             Graphics::draw_game_over_menu();
             break;
 
-        case State::PAUSED:
+        case Game::State::PAUSED:
             ClearBackground(BLACK);
             Graphics::draw_pause_menu();
             break;
 
-        case State::VICTORY:
+        case Game::State::VICTORY:
             Graphics::draw_victory_menu();
             break;
     }
@@ -129,12 +131,13 @@ void draw_game() {
 int main() {
     SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(1024, 480, "Platformer");
+    InitAudioDevice();
     SetTargetFPS(60);
     HideCursor();
 
-    load_fonts();
-    load_images();
-    load_sounds();
+    loadFonts();
+    loadImages();
+    loadSounds();
     LevelManager::loadLevelsFromFile("data/levels.rll");
     LevelManager::getInstanceLevel().loadLevel();
 
@@ -146,9 +149,9 @@ int main() {
     }
 
     LevelManager::unloadLevel();
-    unload_sounds();
-    unload_images();
-    unload_fonts();
+    unloadSounds();
+    unloadImages();
+    unloadFonts();
 
     CloseAudioDevice();
     CloseWindow();

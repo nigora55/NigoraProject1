@@ -3,8 +3,8 @@
 #include "player.h"
 #include "globals.h"
 #include "physics.h"
-#include "images.h"
 #include "graphics.h"
+#include "assets.h"
 #include <algorithm>
 #include <raylib.h>
 
@@ -69,6 +69,6 @@ void EnemiesControl::drawEnemies() {
             (enemy.getPos().x - Player::getInstance().posX()) * cell_size + shift,
             enemy.getPos().y * cell_size
         };
-        draw_sprite(enemy_walk, pos, cell_size);
+        drawSprite(enemy_walk, pos, cell_size);
     }
 }

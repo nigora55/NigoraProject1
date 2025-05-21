@@ -7,7 +7,7 @@
 #include "player_manager.h"
 #include "game_state.h"
 #include "graphics.h"
-#include "images.h"
+#include "assets.h"
 #include <fstream>
 
 using namespace Game;
@@ -105,7 +105,7 @@ void LevelManager::drawLevel() {
                 case WALL:        Graphics::draw_image(wall_image, pos, cell_size); break;
                 case WALL_DARK:   Graphics::draw_image(wall_dark_image, pos, cell_size); break;
                 case SPIKE:       Graphics::draw_image(spike_image, pos, cell_size); break;
-                case COIN:        draw_sprite(coin_sprite, pos, cell_size); break;
+                case COIN:        drawSprite(coin_sprite, pos, cell_size); break;
                 case EXIT:        Graphics::draw_image(exit_image, pos, cell_size); break;
                 default: break;
             }
